@@ -392,8 +392,12 @@ struct TechmapWorker
 			RTLIL::Cell *c = module->addCell(c_name, it.second);
 			design->select(module, c);
 
-			if (!flatten_mode && c->type.begins_with("\\$"))
-				c->type = c->type.substr(1);
+			if (!flatten_mode) {
+				if (c->type.begins_with("\\$"))
+					c->type = c->type.substr(1);
+				else if (c->type == ID(_TECHMAP_CELLTYPE_))
+					c->type = cell->type;
+			}
 
 			vector<IdString> autopurge_ports;
 
@@ -1209,6 +1213,9 @@ struct TechmapPass : public Pass {
 		log("A cell with a name of the form `_TECHMAP_REPLACE_.<suffix>` in the map file will\n");
 		log("be named thus but with the `_TECHMAP_REPLACE_' prefix substituted with the name\n");
 		log("of the cell being replaced.\n");
+		log("A cell with the type _TECHMAP_CELLTYPE_ in the map file will inherit the type\n");
+		log("the cell that is being replaced (helpful in conjunction with the 'techmap_celltype'\n");
+		log("attribute).\n");
 		log("Similarly, a wire named in the form `_TECHMAP_REPLACE_.<suffix>` will cause a\n");
 		log("new wire alias to be created and named as above but with the `_TECHMAP_REPLACE_'\n");
 		log("prefix also substituted.\n");

@@ -158,10 +158,7 @@ module _90_shift_shiftx (A, B, Y);
 			for (i = 0; i < A_WIDTH; i=i+Y_WIDTH2*2)
 				assign AA[i/2 +: Y_WIDTH2] = B[CLOG2_Y_WIDTH] ? Apad[i+Y_WIDTH2 +: Y_WIDTH2] : Apad[i +: Y_WIDTH2];
 			wire [B_WIDTH-2:0] BB = {B[B_WIDTH-1:CLOG2_Y_WIDTH+1], {CLOG2_Y_WIDTH{1'b0}}};
-			if (_TECHMAP_CELLTYPE_ == "$shift")
-				$shift #(.A_SIGNED(A_SIGNED), .B_SIGNED(B_SIGNED), .A_WIDTH(len), .B_WIDTH(B_WIDTH-1), .Y_WIDTH(Y_WIDTH)) _TECHMAP_REPLACE_ (.A(AA), .B(BB), .Y(Y));
-			else
-				$shiftx #(.A_SIGNED(A_SIGNED), .B_SIGNED(B_SIGNED), .A_WIDTH(len), .B_WIDTH(B_WIDTH-1), .Y_WIDTH(Y_WIDTH)) _TECHMAP_REPLACE_ (.A(AA), .B(BB), .Y(Y));
+			_TECHMAP_CELLTYPE_ #(.A_SIGNED(A_SIGNED), .B_SIGNED(B_SIGNED), .A_WIDTH(len), .B_WIDTH(B_WIDTH-1), .Y_WIDTH(Y_WIDTH)) _TECHMAP_REPLACE_ (.A(AA), .B(BB), .Y(Y));
 		end
 		else
 `endif
